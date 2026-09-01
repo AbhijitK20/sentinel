@@ -134,7 +134,7 @@ Provide a concrete fix. Return ONLY the fixed code snippet, no explanation."""
         lines = source.splitlines()
         start = max(0, line - context_lines - 1)
         end = min(len(lines), line + context_lines)
-        return "\n".join(f"{i+1}: {l}" for i, l in enumerate(lines[start:end], start=start))
+        return "\n".join(f"{i+1}: {ln}" for i, ln in enumerate(lines[start:end], start=start))
 
 
 # Singleton instance
