@@ -12,10 +12,8 @@ This module implements the 5 hard gates from VulnHunter for false positive elimi
 
 from __future__ import annotations
 
-import ast
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 
 class EntryType(Enum):
@@ -296,7 +294,7 @@ def trace_entry_to_sink(
     entry: Entry,
     sink: Sink,
     source: str,
-) -> Optional[TracePath]:
+) -> TracePath | None:
     """Trace if an entry's data flows to a sink (simplified forward trace)."""
     lines = source.splitlines()
     entry_line_idx = entry.line - 1

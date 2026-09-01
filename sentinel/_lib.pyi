@@ -1,12 +1,10 @@
 """Type stubs for the Rust _core module."""
 
-from typing import Any
 
 class Severity:
     Error: str
     Warning: str
     Info: str
-    def __str__(self) -> str: ...
 
 class Category:
     Security: str
@@ -15,7 +13,6 @@ class Category:
     AntiCheat: str
     Style: str
     Performance: str
-    def __str__(self) -> str: ...
 
 class Evidence:
     reproduction_code: str

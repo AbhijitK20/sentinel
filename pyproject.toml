@@ -43,3 +43,28 @@ sentinel = "sentinel.cli:app"
 features = ["pyo3/extension-module"]
 python-source = "."
 module-name = "sentinel._core"
+
+[tool.ruff]
+line-length = 130
+fix = true
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = [
+    "E501",
+    "F841",
+    "F821",
+    "B008",
+    "BLE001",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.pytest.ini_options]
+timeout = 30
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-svx --tb=short"

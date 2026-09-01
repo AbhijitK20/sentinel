@@ -6,9 +6,7 @@ with graceful fallback to heuristic-based suggestions.
 
 from __future__ import annotations
 
-import json
 import os
-from typing import Optional
 
 
 class FixSuggestionEngine:
@@ -25,7 +23,7 @@ class FixSuggestionEngine:
         self.api_key = os.getenv("SENTINEL_LLM_API_KEY", "")
         self.model = os.getenv("SENTINEL_LLM_MODEL", "gemini-2.0-flash")
 
-    def generate_fix(self, source: str, finding: dict) -> Optional[str]:
+    def generate_fix(self, source: str, finding: dict) -> str | None:
         """Generate a fix suggestion for a finding.
 
         Args:
@@ -43,7 +41,7 @@ class FixSuggestionEngine:
         except Exception:
             return self._heuristic_fix(finding)
 
-    def _llm_fix(self, source: str, finding: dict) -> Optional[str]:
+    def _llm_fix(self, source: str, finding: dict) -> str | None:
         """Generate fix using LLM API."""
         rule = finding.get("rule", "")
         message = finding.get("message", "")
@@ -71,7 +69,7 @@ Provide a concrete fix. Return ONLY the fixed code snippet, no explanation."""
 
         return None
 
-    def _call_gemini(self, prompt: str) -> Optional[str]:
+    def _call_gemini(self, prompt: str) -> str | None:
         """Call Google Gemini API (pattern from AI Interviewer)."""
         try:
             from google import genai
@@ -85,7 +83,7 @@ Provide a concrete fix. Return ONLY the fixed code snippet, no explanation."""
         except Exception:
             return None
 
-    def _call_openai(self, prompt: str) -> Optional[str]:
+    def _call_openai(self, prompt: str) -> str | None:
         """Call OpenAI API."""
         try:
             from openai import OpenAI
@@ -101,7 +99,7 @@ Provide a concrete fix. Return ONLY the fixed code snippet, no explanation."""
         except Exception:
             return None
 
-    def _heuristic_fix(self, finding: dict) -> Optional[str]:
+    def _heuristic_fix(self, finding: dict) -> str | None:
         """Generate fix using pattern matching (no LLM needed)."""
         rule = finding.get("rule", "")
 
@@ -140,7 +138,7 @@ Provide a concrete fix. Return ONLY the fixed code snippet, no explanation."""
 
 
 # Singleton instance
-_fix_engine: Optional[FixSuggestionEngine] = None
+_fix_engine: FixSuggestionEngine | None = None
 
 
 def get_fix_engine() -> FixSuggestionEngine:

@@ -110,7 +110,7 @@ def scan(
             candidates = analyze_source(fr.path, source)
             for c in candidates:
                 if c.passed_all_gates and c.confidence >= 0.6:
-                    from sentinel._core import Severity, Category
+                    from sentinel._core import Category, Severity
 
                     sev = {"error": Severity.Error, "warning": Severity.Warning}.get(
                         c.severity, Severity.Info
@@ -136,7 +136,7 @@ def scan(
 
     # Sweep verification (VulnHunter Phase 3d)
     if sweep:
-        from sentinel.sweep import sweep_all_patterns, generate_sweep_summary
+        from sentinel.sweep import generate_sweep_summary, sweep_all_patterns
 
         for fr in report.file_reports:
             try:
@@ -151,7 +151,7 @@ def scan(
                 if info["count"] > 0:
                     if fr.path not in additional_findings:
                         additional_findings[fr.path] = []
-                    from sentinel._core import Severity, Category
+                    from sentinel._core import Category, Severity
                     additional_findings[fr.path].append({
                         "id": f"sweep-{pattern_key}-{fr.path}",
                         "rule": f"sweep-{pattern_key}",
@@ -191,9 +191,13 @@ def scan(
 
     # Fix verification with counterevidence (Strix pattern)
     if verify and format == "terminal":
-        from sentinel.fix_verification import generate_fix_suggestion, verify_fix
-        from sentinel.counterevidence import generate_counterevidence, should_adjust_finding
         from rich.table import Table as RichTable
+
+        from sentinel.counterevidence import (
+            generate_counterevidence,
+            should_adjust_finding,
+        )
+        from sentinel.fix_verification import generate_fix_suggestion, verify_fix
 
         verify_table = RichTable(
             title="Fix Verification (5-Gate Check)",
@@ -455,8 +459,8 @@ def _output_sarif(report: Any, output: Path | None) -> None:
                         "physicalLocation": {
                             "artifactLocation": {"uri": fr.get("path", "")},
                             "region": {
-                                "startLine": f.get("line", 0),
-                                "startColumn": f.get("column", 0),
+                                "startLine": max(1, f.get("line", 1)),
+                                "startColumn": max(1, f.get("column", 1)),
                             },
                         }
                     }
@@ -507,7 +511,7 @@ def init(
     ignore_path = Path(".sentinelignore")
 
     if config_path.exists() and not force:
-        console.print(f"[yellow]sentinel.toml already exists[/yellow] (use --force to overwrite)")
+        console.print("[yellow]sentinel.toml already exists[/yellow] (use --force to overwrite)")
         raise typer.Exit(1)
 
     # Write sentinel.toml
@@ -532,7 +536,7 @@ confidence_threshold = 0.3
 enabled = true
 """
     config_path.write_text(config_content)
-    console.print(f"[green]Created[/green] sentinel.toml")
+    console.print("[green]Created[/green] sentinel.toml")
 
     # Write .sentinelignore
     if not ignore_path.exists():
@@ -546,16 +550,15 @@ venv/
 .ruff_cache/
 """
         ignore_path.write_text(ignore_content)
-        console.print(f"[green]Created[/green] .sentinelignore")
+        console.print("[green]Created[/green] .sentinelignore")
 
 
 @app.command()
 def version() -> None:
     """Show sentinel version information."""
-    from sentinel import __version__
 
     console.print(f"[bold]sentinel[/bold] v{__version__}")
-    console.print(f"Rust core: sentinel-core v0.1.0")
+    console.print("Rust core: sentinel-core v0.1.0")
     console.print(f"Python: {sys.version.split()[0]}")
 
 
