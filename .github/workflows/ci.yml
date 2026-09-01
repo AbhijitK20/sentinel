@@ -24,16 +24,22 @@ jobs:
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install dependencies
+      - name: Create venv and install dependencies
         run: |
+          python -m venv .venv
+          source .venv/bin/activate
           python -m pip install --upgrade pip
           pip install maturin pytest
 
       - name: Build Rust core
-        run: maturin develop --manifest-path Cargo.toml
+        run: |
+          source .venv/bin/activate
+          maturin develop --manifest-path Cargo.toml
 
       - name: Run tests
-        run: pytest tests/ -v
+        run: |
+          source .venv/bin/activate
+          pytest tests/ -v
 
   lint:
     runs-on: ubuntu-latest
@@ -47,10 +53,14 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python -m venv .venv
+          source .venv/bin/activate
           pip install ruff
 
       - name: Run ruff
-        run: ruff check sentinel/
+        run: |
+          source .venv/bin/activate
+          ruff check sentinel/
 
   self-review:
     runs-on: ubuntu-latest
@@ -63,11 +73,16 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install sentinel
-        run: pip install sentinel-code-review
+      - name: Create venv and install sentinel
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -e .
 
       - name: Self-review (dogfooding)
-        run: sentinel scan . --format sarif --output sentinel-results.sarif
+        run: |
+          source .venv/bin/activate
+          sentinel scan . --format sarif --output sentinel-results.sarif
 
       - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v3
@@ -89,11 +104,19 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
       - name: Install build tools
-        run: pip install maturin build twine
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install maturin build twine
 
       - name: Build Python package
-        run: maturin build --release --out dist
+        run: |
+          source .venv/bin/activate
+          maturin build --release --out dist
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
