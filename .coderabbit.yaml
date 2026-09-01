@@ -1,0 +1,58 @@
+# CodeRabbit configuration for sentinel
+# https://docs.coderabbit.ai
+
+language: en-US
+
+reviews:
+  profile: assertive
+  request_changes_workflow: true
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  path_instructions:
+    - path: "sentinel/**"
+      instructions: |
+        This is Python code for a code review tool. Focus on:
+        - Security vulnerabilities and false positives
+        - Evidence generation quality
+        - CVSS calculation accuracy
+        - SARIF output compliance
+    - path: "src/**"
+      instructions: |
+        This is Rust code (PyO3 bindings). Focus on:
+        - Memory safety and lifetimes
+        - PyO3 binding correctness
+        - Performance implications
+    - path: ".github/**"
+      instructions: |
+        This is CI/CD configuration. Focus on:
+        - Workflow correctness
+        - Security of secrets handling
+        - Proper dependency pinning
+
+  tools:
+    ruff:
+      enabled: true
+    rustfmt:
+      enabled: true
+
+  auto_author:
+    enabled: true
+    add_todos: true
+
+  filters:
+    ignored_files:
+      - "tests/fixtures/**"
+      - "demo-project/**"
+      - "*.gif"
+      - "*.svg"
+      - "*.html"
+      - "demo.tape"
+
+chat:
+  auto_reply: true
+
+knowledge:
+  persist_cross_session: true
+  base_dir_for_changed_files: "."
