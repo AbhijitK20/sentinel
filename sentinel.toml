@@ -1,0 +1,66 @@
+# Sentinel Configuration
+# Place this file in your project root as sentinel.toml
+
+[scan]
+# Directories to exclude from scanning
+exclude_dirs = [
+    "tests",
+    "migrations",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "node_modules",
+    ".git",
+    "target",
+    "dist",
+    "build",
+]
+
+# Maximum file size to scan (in KB)
+max_file_size_kb = 500
+
+# Maximum file count (0 = unlimited)
+max_files = 0
+
+[severity]
+# Minimum severity to report: error, warning, info
+min_severity = "info"
+
+# Severity that causes CI failure: error, warning, info, none
+fail_on = "warning"
+
+[compliance]
+# Compliance frameworks to check
+# Options: hipaa, soc2, gdpr, pci, sox
+frameworks = []
+
+# Custom compliance rules (file path to rule definitions)
+custom_rules = []
+
+[output]
+# Default output format: terminal, json, html, sarif
+format = "terminal"
+
+# Default output file (null = stdout)
+output_file = null
+
+[rules]
+# Rules to disable (list of rule IDs)
+disabled = []
+
+# Rules to enable exclusively (empty = all rules enabled)
+enabled = []
+
+# Confidence threshold (0.0 - 1.0)
+# Findings below this threshold are not reported
+confidence_threshold = 0.3
+
+[evidence]
+# Enable evidence generation
+enabled = true
+
+# Maximum reproduction code length (characters)
+max_reproduction_length = 1000
+
+# Proof types to include: behavioral, static-analysis, structural
+proof_types = ["behavioral", "static-analysis", "structural"]

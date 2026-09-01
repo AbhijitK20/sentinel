@@ -1,0 +1,18 @@
+# sentinel pre-commit hook
+# Add to your .pre-commit-config.yaml:
+#
+# repos:
+#   - repo: https://github.com/sentinel/sentinel
+#     rev: v0.1.0
+#     hooks:
+#       - id: sentinel
+#         args: [--fail-on=warning]
+
+id: sentinel
+name: Sentinel Code Review
+description: "Verify-first code review with evidence generation"
+entry: sentinel scan
+language: python
+types: [python]
+minimum_pre_commit_version: "2.9.0"
+args: [--fail-on=warning]

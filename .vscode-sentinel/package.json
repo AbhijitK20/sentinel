@@ -1,0 +1,55 @@
+{
+  "name": "sentinel-vscode",
+  "displayName": "Sentinel Code Review",
+  "description": "Verify-first code review with evidence generation",
+  "version": "0.1.0",
+  "publisher": "sentinel",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Linters", "Programming Languages"],
+  "activationEvents": ["onLanguage:python"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "sentinel.scan",
+        "title": "Sentinel: Scan Current File"
+      },
+      {
+        "command": "sentinel.scanWorkspace",
+        "title": "Sentinel: Scan Workspace"
+      },
+      {
+        "command": "sentinel.showRules",
+        "title": "Sentinel: Show Rules"
+      }
+    ],
+    "configuration": {
+      "title": "Sentinel",
+      "properties": {
+        "sentinel.framework": {
+          "type": "string",
+          "default": "",
+          "description": "Compliance framework to check (hipaa, soc2, gdpr, pci, sox)"
+        },
+        "sentinel.failOn": {
+          "type": "string",
+          "default": "warning",
+          "enum": ["error", "warning", "info"],
+          "description": "Minimum severity for diagnostics"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}

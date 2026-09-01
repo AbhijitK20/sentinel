@@ -1,0 +1,92 @@
+name: "Sentinel Code Review"
+description: "Verify-first code review with evidence generation"
+
+inputs:
+  target:
+    description: "Directory or file to scan"
+    required: false
+    default: "."
+  fail-on:
+    description: "Minimum severity to fail: error, warning, info"
+    required: false
+    default: "warning"
+  output-format:
+    description: "Output format: terminal, json, sarif"
+    required: false
+    default: "json"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install sentinel
+      shell: bash
+      run: pip install sentinel-code-review
+
+    - name: Run sentinel scan
+      shell: bash
+      run: |
+        sentinel scan ${{ inputs.target }} \
+          --format json \
+          --output sentinel-report.json
+
+    - name: Post PR comment
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const report = JSON.parse(fs.readFileSync('sentinel-report.json', 'utf8'));
+          const summary = report.summary;
+          const errors = summary.by_severity?.error || 0;
+          const warnings = summary.by_severity?.warning || 0;
+          const infos = summary.by_severity?.info || 0;
+
+          let body = `## 🛡️ Sentinel Code Review\n\n`;
+          body += `| Metric | Value |\n|--------|-------|\n`;
+          body += `| Files scanned | ${summary.total_files} |\n`;
+          body += `| Errors | ${errors} |\n`;
+          body += `| Warnings | ${warnings} |\n`;
+          body += `| Info | ${infos} |\n`;
+          body += `| Compliance | ${summary.compliance_score}% |\n\n`;
+
+          if (errors > 0 || warnings > 0) {
+            body += `### Findings\n\n`;
+            for (const fr of report.file_reports) {
+              for (const f of fr.findings.slice(0, 5)) {
+                body += `- **${f.severity.toUpperCase()}** \`${f.rule}\` at ${fr.path}:${f.line}: ${f.message}\n`;
+              }
+              if (fr.findings.length > 5) {
+                body += `- ... and ${fr.findings.length - 5} more in ${fr.path}\n`;
+              }
+            }
+          } else {
+            body += `✅ No issues found!\n`;
+          }
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
+
+    - name: Check threshold
+      shell: bash
+      run: |
+        if [ -f sentinel-report.json ]; then
+          ERRORS=$(python3 -c "import json; r=json.load(open('sentinel-report.json')); print(r['summary']['by_severity'].get('error', 0))")
+          WARNINGS=$(python3 -c "import json; r=json.load(open('sentinel-report.json')); print(r['summary']['by_severity'].get('warning', 0))")
+
+          if [ "${{ inputs.fail-on }}" = "error" ] && [ "$ERRORS" -gt 0 ]; then
+            echo "Found $ERRORS errors"
+            exit 1
+          elif [ "${{ inputs.fail-on }}" = "warning" ] && [ "$ERRORS" -gt 0 ] || [ "$WARNINGS" -gt 0 ]; then
+            echo "Found $ERRORS errors, $WARNINGS warnings"
+            exit 1
+          fi
+        fi

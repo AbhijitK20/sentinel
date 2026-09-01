@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sentinel Demo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d1117;
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+    padding: 40px;
+    color: #c9d1d9;
+  }
+  .terminal {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #21262d;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot.red { background: #f85149; }
+  .dot.yellow { background: #d29922; }
+  .dot.green { background: #3fb950; }
+  .terminal-title { margin-left: 12px; color: #8b949e; font-size: 13px; }
+
+  .line { margin: 4px 0; line-height: 1.6; font-size: 14px; }
+  .prompt { color: #7ee787; }
+  .cmd { color: #d2a8ff; font-weight: bold; }
+  .output { color: #8b949e; }
+  .error { color: #f85149; font-weight: bold; }
+  .warning { color: #d29922; }
+  .success { color: #3fb950; }
+  .info { color: #58a6ff; }
+  .muted { color: #484f58; }
+  .highlight { color: #f0883e; }
+  .evidence-box {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 13px;
+  }
+  .evidence-label { color: #58a6ff; font-weight: bold; }
+  .gate { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin: 2px; }
+  .gate.pass { background: #238636; color: #fff; }
+  .gate.fail { background: #da3633; color: #fff; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .badge.error { background: #f8514933; color: #f85149; border: 1px solid #f8514955; }
+  .badge.warning { background: #d2992233; color: #d29922; border: 1px solid #d2992255; }
+  .badge.info { background: #58a6ff33; color: #58a6ff; border: 1px solid #58a6ff55; }
+  .badge.success { background: #3fb95033; color: #3fb950; border: 1px solid #3fb95055; }
+
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: #c9d1d9;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+  }
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  .section { margin: 20px 0; }
+  .section-title { color: #58a6ff; font-weight: bold; margin-bottom: 8px; }
+  .divider { border-top: 1px solid #21262d; margin: 16px 0; }
+
+  .table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  .table th { text-align: left; padding: 6px 12px; border-bottom: 1px solid #30363d; color: #8b949e; font-size: 12px; }
+  .table td { padding: 6px 12px; border-bottom: 1px solid #21262d; font-size: 13px; }
+  .table tr:hover { background: #1c2128; }
+</style>
+</head>
+<body>
+<div class="terminal">
+  <div class="terminal-header">
+    <div class="dot red"></div>
+    <div class="dot yellow"></div>
+    <div class="dot green"></div>
+    <span class="terminal-title">sentinel — ~/demo-project</span>
+  </div>
+
+  <!-- Command 1: Basic Scan -->
+  <div class="line"><span class="prompt">$</span> <span class="cmd">sentinel scan demo-project/</span><span class="cursor"></span></div>
+  <div class="line"><span class="info">🛡️  Sentinel</span> scanning demo-project/</div>
+  <div class="line"></div>
+
+  <div class="section">
+    <div class="line"><span class="success">┌─────────────────────────────────────────────────────────────┐</span></div>
+    <div class="line"><span class="success">│</span> <span class="highlight">Scan Summary</span>                                              <span class="success">│</span></div>
+    <div class="line"><span class="success">├─────────────────────┬───────────────────────────────────────┤</span></div>
+    <div class="line"><span class="success">│</span> Files scanned       │ <span class="info">1</span>                                     <span class="success">│</span></div>
+    <div class="line"><span class="success">│</span> Files with issues   │ <span class="warning">1</span>                                     <span class="success">│</span></div>
+    <div class="line"><span class="success">│</span> Total findings      │ <span class="error">6</span>                                     <span class="success">│</span></div>
+    <div class="line"><span class="success">│</span>   Error             │ <span class="error">4</span>                                     <span class="success">│</span></div>
+    <div class="line"><span class="success">│</span>   Warning           │ <span class="warning">2</span>                                     <span class="success">│</span></div>
+    <div class="line"><span class="success">│</span> Compliance          │ <span class="warning">50%</span>                                   <span class="success">│</span></div>
+    <div class="line"><span class="success">└─────────────────────┴───────────────────────────────────────┘</span></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Finding 1: SQL Injection -->
+  <div class="section">
+    <div class="section-title">✗ SQL INJECTION</div>
+    <div class="line">  <span class="badge error">ERROR</span> <span class="highlight">sql-injection</span> — Line 6</div>
+    <div class="line">  Variable 'query' contains f-string SQL — passed to execute()</div>
+    <div class="evidence-box">
+      <div class="evidence-label">📋 Evidence (behavioral)</div>
+      <div class="muted">user_id = "1 OR 1=1"</div>
+      <div class="muted">query = f"SELECT * FROM users WHERE id = <span class="error">{user_id}</span>"</div>
+      <div class="muted"># Returns ALL rows — injection confirmed</div>
+    </div>
+    <div class="line">  <span class="success">💡 Fix:</span> cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Finding 2: Shell Injection -->
+  <div class="section">
+    <div class="section-title">✗ SHELL INJECTION</div>
+    <div class="line">  <span class="badge error">ERROR</span> <span class="highlight">subprocess-shell-true</span> — Line 10</div>
+    <div class="line">  subprocess called with shell=True — potential command injection</div>
+    <div class="evidence-box">
+      <div class="evidence-label">📋 Evidence (behavioral)</div>
+      <div class="muted">user_input = "legitimate_cmd; cat /etc/passwd"</div>
+      <div class="muted">subprocess.run(<span class="error">user_input, shell=True</span>)</div>
+      <div class="muted"># Attacker runs arbitrary commands</div>
+    </div>
+    <div class="line">  <span class="success">💡 Fix:</span> subprocess.run(args, shell=False)</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Finding 3: Hardcoded Secret -->
+  <div class="section">
+    <div class="section-title">✗ HARDCODED SECRET</div>
+    <div class="line">  <span class="badge error">ERROR</span> <span class="highlight">hardcoded-secret</span> — Line 13</div>
+    <div class="line">  Potential hardcoded secret in variable 'API_KEY'</div>
+    <div class="evidence-box">
+      <div class="evidence-label">📋 Evidence (static-analysis)</div>
+      <div class="muted">API_KEY = <span class="error">"sk-1234567890abcdef"</span></div>
+      <div class="muted"># Anyone with repo access can read it</div>
+    </div>
+    <div class="line">  <span class="success">💡 Fix:</span> os.environ.get('API_KEY')</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Finding 4: Unsafe Deserialization -->
+  <div class="section">
+    <div class="section-title">✗ UNSAFE DESERIALIZATION</div>
+    <div class="line">  <span class="badge error">ERROR</span> <span class="highlight">unsafe-deserialization</span> — Line 17</div>
+    <div class="line">  pickle deserialization — can execute arbitrary code</div>
+    <div class="line">  <span class="success">💡 Fix:</span> json.loads(data) or safetensors</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Finding 5: Bare Except -->
+  <div class="section">
+    <div class="section-title">✗ BARE EXCEPT</div>
+    <div class="line">  <span class="badge warning">WARNING</span> <span class="highlight">bare-except</span> — Line 22</div>
+    <div class="line">  Bare 'except:' catches SystemExit and KeyboardInterrupt</div>
+    <div class="line">  <span class="success">💡 Fix:</span> except Exception:</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Summary -->
+  <div class="line"><span class="success">Summary:</span> <span class="error">4 errors</span>, <span class="warning">2 warnings</span>, 0 info</div>
+  <div class="line"><span class="success">Compliance score:</span> <span class="warning">50%</span></div>
+</div>
+</body>
+</html>

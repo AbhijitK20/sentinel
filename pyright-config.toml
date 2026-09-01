@@ -1,0 +1,36 @@
+[tool.ruff]
+line-length = 130
+fix = true
+
+[tool.ruff.lint]
+select = ["ASYNC", "E", "F", "FAST", "I", "PLE"]
+ignore = [
+    "E501",
+    "F841",
+]
+unfixable = ["E501", "F841"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+docstring-code-line-length = 140
+
+[tool.pyright]
+typeCheckingMode = "basic"
+include = ["sentinel"]
+exclude = [
+    ".venv/",
+    "__pycache__/",
+    "target/",
+    "dist/",
+    "build/",
+]
+reportMissingTypeStubs = false
+
+[tool.pytest.ini_options]
+timeout = 30
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-svx --tb=short"

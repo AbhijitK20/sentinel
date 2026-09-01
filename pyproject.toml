@@ -1,0 +1,45 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "sentinel-code-review"
+version = "0.1.0"
+description = "Code review that proves it's right — verify-first analysis with evidence generation"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [{name = "Sentinel Contributors"}]
+keywords = ["security", "code-review", "sast", "static-analysis", "vulnerability", "python"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Rust",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Security",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "typer>=0.12",
+    "rich>=13",
+]
+
+[project.urls]
+Homepage = "https://github.com/sentinel/sentinel"
+Repository = "https://github.com/sentinel/sentinel"
+Issues = "https://github.com/sentinel/sentinel/issues"
+Documentation = "https://github.com/sentinel/sentinel#readme"
+
+[project.scripts]
+sentinel = "sentinel.cli:app"
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+python-source = "."
+module-name = "sentinel._core"
