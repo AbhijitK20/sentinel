@@ -9,10 +9,10 @@
 
 The first verify-first code review engine that generates **proof** for every finding.
 
-[![CI](https://github.com/sentinel/sentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/sentinel/sentinel/actions)
+[![CI](https://github.com/AbhijitK20/sentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/AbhijitK20/sentinel/actions)
 [![PyPI](https://img.shields.io/pypi/v/sentinel-code-review?color=blue&label=PyPI)](https://pypi.org/project/sentinel-code-review/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Stars](https://img.shields.io/github/stars/sentinel/sentinel?style=social)](https://github.com/sentinel/sentinel)
+[![Stars](https://img.shields.io/github/stars/AbhijitK20/sentinel?style=social)](https://github.com/AbhijitK20/sentinel)
 
 [Installation](#installation) · [Quick Start](#quick-start) · [Rules](#rules) · [Evidence](#evidence) · [Integrations](#integrations)
 
@@ -196,7 +196,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: sentinel/sentinel-review@v1
+      - uses: AbhijitK20/sentinel-review@v1
         with:
           fail-on: warning
 ```
@@ -214,7 +214,7 @@ ext install sentinel.sentinel-vscode
 ```yaml
 # .pre-commit-config.yaml
 repos:
-  - repo: https://github.com/sentinel/sentinel
+  - repo: https://github.com/AbhijitK20/sentinel
     rev: v0.1.0
     hooks:
       - id: sentinel
@@ -223,7 +223,7 @@ repos:
 ### Docker
 
 ```bash
-docker run --rm -v $(pwd):/app sentinel/sentinel scan /app
+docker run --rm -v $(pwd):/app AbhijitK20/sentinel scan /app
 ```
 
 ## Configuration
@@ -279,7 +279,7 @@ sentinel/
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ```bash
-git clone https://github.com/sentinel/sentinel.git
+git clone https://github.com/AbhijitK20/sentinel.git
 cd sentinel
 pip install -e ".[dev]"
 maturin develop
@@ -305,6 +305,6 @@ MIT License — see [LICENSE](LICENSE).
 
 **Built with Rust + Python**
 
-[GitHub](https://github.com/sentinel/sentinel) · [PyPI](https://pypi.org/project/sentinel-code-review/)
+[GitHub](https://github.com/AbhijitK20/sentinel) · [PyPI](https://pypi.org/project/sentinel-code-review/)
 
 </div>
