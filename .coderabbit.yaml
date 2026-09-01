@@ -52,7 +52,3 @@ reviews:
 
 chat:
   auto_reply: true
-
-knowledge:
-  persist_cross_session: true
-  base_dir_for_changed_files: "."
